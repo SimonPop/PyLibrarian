@@ -2,6 +2,8 @@ import pandas as pd
 import ast
 import torch
 import numpy as np
+import jax.numpy as jnp
+from typing import Dict
 from pylibrarian.recommender.models import AttentionModel
 
 def trim_name(name: str) -> str:
@@ -57,3 +59,11 @@ class PackageDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, index):
         return {"x": self.X[index], "y":self.y[index], "label": self.labels[index] }
+    
+    def batched_example(self) -> Dict[str, jnp.array]:
+        """Generates a sample of the dataset to instanciate Haiku forward functions.
+
+        Returns:
+            Tuple[jnp.array, jnp.array]: X and Y samples.
+        """
+        return {"x": self[0]['x'][None,:], "y": self[0]['y'][None,:]}

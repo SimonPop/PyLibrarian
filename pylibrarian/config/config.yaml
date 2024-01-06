@@ -1,2 +1,7 @@
 parser: 
   file: "packages.txt"
+
+training:
+  batch_size: 32
+  epochs: 100
+  learning_rate: 0.001

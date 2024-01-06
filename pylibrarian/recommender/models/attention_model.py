@@ -19,6 +19,11 @@ class AttentionModel(hk.Module):
     encoding = self.attention(queries, value_keys, value_keys)
     return jnp.einsum("bli, bli -> bl", encoding, queries).reshape(-1,1)
   
-def _custom_forward_fn(x, y):
-  module = AttentionModel(vocab_size=len(dataset.tokenizer) + 1)
-  return module(x, y)
+  @classmethod
+  def forward_function(cls, **kwargs):
+    """Instanciate the forward function to be used with JAX Haiku.
+
+    Returns:
+        _type_: Forward function.
+    """
+    return lambda x, y: cls(**kwargs)(x, y)
